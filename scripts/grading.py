@@ -121,5 +121,26 @@ prev_run_ID, last_run_timestamp = getLastRun()
 tokenCheck(prev_run_ID, last_run_timestamp)
 tokenAssignment()
 tokenBurn()
+        
+## Demo for presentation below:
+
+""" complete = [0,1,2,3,4,5,6]
+
+def demoGradeA():
+    amounts = [1] * len(complete)
+    call_function = web3.eth.contract(address=CONTRACT_ADDRESS, abi=ABI).functions.mintBatch(STUDENT_ADDRESS,complete,amounts).build_transaction({"chainId": web3.eth.chain_id, "from": OWNER_ADDRESS, "nonce": web3.eth.get_transaction_count(OWNER_ADDRESS)})
+    signed_tx = web3.eth.account.sign_transaction(call_function, private_key=OWNER_PRIVATE_KEY)
+    send_tx = web3.eth.send_raw_transaction(signed_tx.rawTransaction)
+    tx_receipt = web3.eth.wait_for_transaction_receipt(send_tx)
+    print(tx_receipt)
+
+    call_function = web3.eth.contract(address=CONTRACT_ADDRESS, abi=ABI).functions.certificateAllocation(STUDENT_ADDRESS).build_transaction({"chainId": web3.eth.chain_id, "from": OWNER_ADDRESS, "nonce": web3.eth.get_transaction_count(OWNER_ADDRESS)})
+    signed_tx = web3.eth.account.sign_transaction(call_function, private_key=OWNER_PRIVATE_KEY)
+    send_tx = web3.eth.send_raw_transaction(signed_tx.rawTransaction)
+    tx_receipt = web3.eth.wait_for_transaction_receipt(send_tx)
+    print(tx_receipt)
+
+demoGradeA()
+ """
 
 
