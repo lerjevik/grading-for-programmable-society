@@ -111,10 +111,10 @@ describe("Grading Contract", function () {
             "Student can't have more than 1 of this token"
           );
 
-        // Teacher tries to give student 1 "Presentations"-token as well as 1 "OpenSourceContributions"-token
-        await contract.connect(owner).mintBatch(student, [0,3], [1,1]);
-        expect(await contract.balanceOf(student, 0)).to.equal(1);
-        expect(await contract.balanceOf(student, 3)).to.equal(1);
+        // Teacher tries to give student 1 "SmartContractProtocol"-token 7 times
+        await expect(contract.connect(owner).mintBatch(student, [1,1,1,1,1,1,1], [1,1,1,1,1,1,1])).to.be.rejected.revertedWith(
+            "Student can't have more than 1 of this token"
+          );
     });
 
     it("mintBatchHelper: Transaction should be rejected if called by another student, but pass if called by owner", async function () {
