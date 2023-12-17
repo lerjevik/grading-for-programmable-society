@@ -69,7 +69,6 @@ contract Grading is ERC1155, Ownable {
         for (uint i=0; i<ids.length; i++){
             mintBatchHelper(account, ids[i], amounts[i]);
         }
-        _mintBatch(account, ids, amounts, "0x0");
     }
 
     /**
@@ -79,7 +78,9 @@ contract Grading is ERC1155, Ownable {
     * @param id ID of token to be minted
     * @param amount Amount of tokens to be minted
     */
-    function mintBatchHelper(address account, uint256 id, uint256 amount) public onlyOwner checkAmounts(account, id, amount){}
+    function mintBatchHelper(address account, uint256 id, uint256 amount) public onlyOwner checkAmounts(account, id, amount){
+        _mint(account, id, amount, "0x0");
+    }
 
     /**
     * @notice Ensures that the maximum quantity of respective token per student is respected
@@ -105,31 +106,13 @@ contract Grading is ERC1155, Ownable {
     * @param account Address of account to allocate certificate to
     */
     function certificateAllocation(address account) public onlyOwner {
-        uint256[] memory ids = new uint256[](11);
-        ids[0] = 0;
-        ids[1] = 1;
-        ids[2] = 2;
-        ids[3] = 3;
-        ids[4] = 4;
-        ids[5] = 5;
-        ids[6] = 6;
-
-        address[] memory accounts = new address[](11);
-        accounts[0] = account;
-        accounts[1] = account;
-        accounts[2] = account;
-        accounts[3] = account;
-        accounts[4] = account;
-        accounts[5] = account;
-        accounts[6] = account;
-
         uint256 sumMandatoryTasks = 0;
         for(uint256 i = 0; i <= 2; i++) 
-            sumMandatoryTasks = sumMandatoryTasks + balanceOfBatch(accounts,ids)[i]; 
+            sumMandatoryTasks = sumMandatoryTasks + balanceOf(account,i); 
         
         uint256 sumOptionalTasks = 0;
         for(uint256 j = 3; j <= 6; j++) 
-            sumOptionalTasks = sumOptionalTasks + balanceOfBatch(accounts,ids)[j];
+            sumOptionalTasks = sumOptionalTasks + balanceOf(account,j);
         
         require(sumMandatoryTasks == 3, "Student must have passed mandatory tasks");
         
