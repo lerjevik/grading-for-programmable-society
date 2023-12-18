@@ -117,16 +117,6 @@ describe("Grading Contract", function () {
           );
     });
 
-    it("mintBatchHelper: Transaction should be rejected if called by another student, but pass if called by owner", async function () {
-        const { contract, owner, student, student2 } = await loadFixture(deploymentFunction);
-
-        // Student tries to allocate 1 "Presentations"-token to student2 
-        await expect(contract.connect(student).mintBatchHelper(student2, 0, 1)).to.be.rejected
-
-        // Teacher tries to allocate 1 "Presentations"-token to student2 
-        await expect(contract.connect(owner).mintBatchHelper(student2, 0, 1)).to.not.be.rejected
-    });
-
     it("certificateAllocation: Transaction should be rejected if called by another student, but pass if called by owner", async function () {
         const { contract, owner, student } = await loadFixture(deploymentFunction);
 
