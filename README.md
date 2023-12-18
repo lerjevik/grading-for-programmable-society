@@ -77,6 +77,10 @@ The contract can be deployed using:
 
 This causes the contract address to be printed to the terminal. This address should be added to the .env file in order to run the Python script (see instructions in Python Script-section).
 
+## Related Works
+
+Our smart contract operates on a lower level of educational information compared to most related works [1](https://link-springer-com.focus.lib.kth.se/chapter/10.1007/978-3-031-10507-4_13#Sec2). One article suggested an ECTS-like credit system on blockchain. It uploads the final grades to blockchain and transfers the corresponding tokens to students, so it does not go into course-level detail [2](https://ieeexplore-ieee-org.focus.lib.kth.se/document/8247166). The publication "A Blockchain-Based Fair and Transparent Homework Grading System for Online Education" goes into course-level detail, by allowing for uploading submissions for a course. However, their grading system is based on collective grading by multiple judges [1](https://link-springer-com.focus.lib.kth.se/chapter/10.1007/978-3-031-10507-4_13#Sec2). Instead, we implement Canvas, the world-leading Learning Management Platform [3](https://www.instructure.com/canvas) to push the grades from this course automatically from Canvas to the blockchain.
+
 ## Authors Contact Details
 Dina Lerjevik (lerjevik@kth.se)\
 Alexander Gustavsson (algust@kth.se)
