@@ -36,6 +36,21 @@ describe("Grading Contract", function () {
         expect(await contract.balanceOf(student, 0)).to.equal(0);
     });
 
+    it("burnBatch: Transaction should be rejected if called by another student, but pass if called by owner", async function () {
+        const { contract, owner, student, student2 } = await loadFixture(deploymentFunction);
+
+        // Allocation of 1 "Demos"-token and 1 "Feedback"-token 
+        await contract.connect(owner).mintBatch(student, [2,4], [1,1]);
+
+        // Student tries to burn 1 "Demos"-token and 1 "Feedback"-token for student
+        await expect(contract.connect(student).burnBatch(student2, [2,4], [1,1])).to.be.rejected
+
+        // Teacher tries to burn 1 "Demos"-token and 1 "Feedback"-token for student
+        await contract.connect(owner).burnBatch(student, [2,4], [1,1]);
+        expect(await contract.balanceOf(student, 2)).to.equal(0);
+        expect(await contract.balanceOf(student, 4)).to.equal(0);
+    });
+
     it("mint: Transaction should be rejected if called by another student, but pass if called by owner", async function () {
         const { contract, owner, student, student2 } = await loadFixture(deploymentFunction);
 

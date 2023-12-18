@@ -48,6 +48,19 @@ contract Grading is ERC1155, Ownable {
     }
 
     /**
+    * @notice Allows teacher to burn tokens of different IDs and quantities simultaneously for a student 
+    * @dev Only calleable by Owner
+    * @param account Address of account where tokens will be burned
+    * @param ids Array with IDs of tokens to be burned
+    * @param amounts Array with amount of tokens to be burned for each ID
+    */
+    function burnBatch(address account, uint256[] memory ids, uint256[] memory amounts) public onlyOwner {
+        for (uint i=0; i<ids.length; i++){
+            burn(account, ids[i], amounts[i]);
+        }
+    }
+
+    /**
     * @notice Allows teacher to mint tokens for a student 
     * @dev Only calleable by Owner. Implements checkAmounts modifier
     * @param account Address of account where tokens will be minted
