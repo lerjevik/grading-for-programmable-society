@@ -67,19 +67,8 @@ contract Grading is ERC1155, Ownable {
     */
     function mintBatch(address account, uint256[] memory ids, uint256[] memory amounts) public onlyOwner {
         for (uint i=0; i<ids.length; i++){
-            mintBatchHelper(account, ids[i], amounts[i]);
+            mint(account, ids[i], amounts[i]);
         }
-    }
-
-    /**
-    * @notice Helper to function above
-    * @dev Only calleable by Owner. Used to implement checkAmounts
-    * @param account Address of account where tokens will be minted
-    * @param id ID of token to be minted
-    * @param amount Amount of tokens to be minted
-    */
-    function mintBatchHelper(address account, uint256 id, uint256 amount) public onlyOwner checkAmounts(account, id, amount){
-        _mint(account, id, amount, "0x0");
     }
 
     /**
