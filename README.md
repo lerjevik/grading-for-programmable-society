@@ -2,11 +2,11 @@
 
 This project was written within the scope of the [DD2485 Programmable Society course](https://github.com/KTH/programmable-society) at KTH Royal Institute of Technology in Stockholm, Sweden. The assignment was to create a smart contract to be presented during the Smart Contract Grand Oral, on December 18, 2023. 
 
-We chose to develop a smart contract for storing student grades from the DD2485 course assignments on blockchain. Whenever a student presents an assignment, their grade for that assignment is reported to Canvas LMS. Then, every 6 hours, a GitHub Action will run a Python script. The Python script fetches grading data using `canvasapi` and mints an assignment-token for every assignment that has been graded with `complete` since the last GitHub Action workflow run. Moreover, if a student was misgraded, i.e., first recieved `complete` and then `incomplete` during the next workflow run for some reason, the student's assignment-token is burnt. The interaction with the smart contract is made possible by using `web3.py` and connecting to blockchain thorugh a Chainstack node. 
+We chose to develop a smart contract for storing student grades from the DD2485 course assignments on blockchain. Whenever a student presents an assignment, their grade for that assignment is reported to Canvas LMS. Then, every 6 hours, a GitHub Action will run a Python script. The Python script fetches grading data using `canvasapi` and mints an assignment-token for every assignment that has been graded with `complete` since the last GitHub Action workflow run. Moreover, if a student was misgraded, i.e., first recieved `complete` and then `incomplete` during the next workflow run for some reason, the student's assignment-token is burnt. The interaction with the smart contract is made possible by using `web3.py` and connecting to blockchain through a Chainstack node. 
 
 ## Course Grading Policy
 
-For the 2023 iteration of the DD2485 Programmable Society, each student has to recieve `complete` in Canvas for three mandatory assignments: `Presentations`, `Smart Contract Protocol` and `Demos`. This will give the student a final grade of E. Moreover, there are four optional assignments: `Open Source Contributions`, `Feedback`, `Essays` and `Questions`. Completing each of these raises the student's grade with one step, up to the maximum grade of A.
+For the 2023 iteration of the DD2485 Programmable Society, each student has to receive `complete` in Canvas for three mandatory assignments: `Presentations`, `Smart Contract Protocol` and `Demos`. This will give the student a final grade of E. Moreover, there are four optional assignments: `Open Source Contributions`, `Feedback`, `Essays` and `Questions`. Completing each of these raises the student's grade with one step, up to the maximum grade of A.
 
 ## Downloading Repository
 
@@ -16,13 +16,13 @@ After cloning the repository, `cd` to the directory and run the following comman
 
 ## Python Script
 
-The Python Script `scripts/Grading.py` first connects to the Ethereum Sepolia Testnet using a Chainstack node. Thereafter, `PyGithub` is used to get the timestamp of the last GitHub Action workflow run. We then use `canvasapi` to iterate thorugh the assignment submissions for a student. If a grade change for a submission has occured since the last workflow run (or if the action is being run for the first time) we append the assignment's token ID to a list `complete[]` (if the grade is `complete`) or to a list `incomplete[]` (if the grade is `incomplete`). 
+The Python Script `scripts/Grading.py` first connects to the Ethereum Sepolia Testnet using a Chainstack node. Thereafter, `PyGithub` is used to get the timestamp of the last GitHub Action workflow run. We then use `canvasapi` to iterate through the assignment submissions for a student. If a grade change for a submission has occurred since the last workflow run (or if the action is being run for the first time) we append the assignment's token ID to a list `complete[]` (if the grade is `complete`) or to a list `incomplete[]` (if the grade is `incomplete`). 
 
 The next step is to connect to our smart contract. For this, we followed [this guide](https://github.com/soos3d/call-smart-contract-functions-using-web3.py). We first create an instance of our smart contract (which is deployed to the Sepolia Testnet) using the deployed contract address and ABI (a separate script for treating the ABI returned to clipboard by e.g., REMIX IDE is included in `scripts/abi.py`). We then call our smart contract function `mintBatch(address account, uint256[] memory ids, uint256[] memory amounts)`, with the student's wallet address, the `complete[]` list of token IDs for newly graded assignments and a list of the amount of tokens to create for each token ID `amounts = [1] * len(complete)`. We also call our smart contract function `burnBatch(address account, uint256[] memory ids, uint256[] memory amounts)` using the `incomplete[]` list of IDs to burn any previously awarded token for these IDs.
 
 ### Deployment
 
-**Note: Since we only hade student access on Canvas, the Python Script only tracks grade changes on Canvas for one student and not an entire class. That functionality is something that can would added in the future by someone with teacher access.**
+**Note: Since we only have student access on Canvas, the Python Script only tracks grade changes on Canvas for one student and not an entire class. That functionality is something that could be added in the future by someone with teacher access.**
 
 To run the project locally, create a .env file and fill out the following:
 
@@ -39,7 +39,7 @@ CONTRACT_ADDRESS = ""
 STUDENT_ADDRESS = ""
 ```
 
-The CANVAS_API_KEY for the student can be acquired following [this guide](https://community.canvaslms.com/t5/Student-Guide/How-do-I-manage-API-access-tokens-as-a-student/ta-p/273). A GIT_TOKEN can be created following [this guide](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens). GIT_REPO is the name of the repository where the GitHub Action workflows are run, e.g., grading-for-programmable-society for [this repository](https://github.com/lerjevik/grading-for-programmable-society). CANVAS_USER is the Canvas User ID for the student and can be found using [this guide](https://community.canvaslms.com/t5/Canvas-Question-Forum/How-to-find-8-digit-Canvas-Id/m-p/465608). CANVAS_COURSE_ID for the course can be found using [this guide](https://community.canvaslms.com/t5/Student-Guide/How-do-I-view-all-my-Canvas-courses-as-a-student/ta-p/520). CHAINSTACK_NODE represents the Chainstack Node URL, which you can get following [this guide](https://docs.chainstack.com/docs/manage-your-node). OWNER_ADDRESS is the wallet address of the the contract owner (i.e., in the future this would be the course responsible/teacher). OWNER_PRIVATE_KEY represents the [private key](https://support.metamask.io/hc/en-us/articles/360015289632-How-to-Export-an-Account-Private-Key) for the owner's Metamask wallet. CONTRACT_ADDRESS is the address that gets printed in the terminal when you deploy the contract (see instructions below). STUDENT_ADDRESS is the address of the student.
+The CANVAS_API_KEY for the student can be acquired following [this guide](https://community.canvaslms.com/t5/Student-Guide/How-do-I-manage-API-access-tokens-as-a-student/ta-p/273). A GIT_TOKEN can be created following [this guide](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens). GIT_REPO is the name of the repository where the GitHub Action workflows are run, e.g., grading-for-programmable-society for [this repository](https://github.com/lerjevik/grading-for-programmable-society). CANVAS_USER is the Canvas User ID for the student and can be found using [this guide](https://community.canvaslms.com/t5/Canvas-Question-Forum/How-to-find-8-digit-Canvas-Id/m-p/465608). CANVAS_COURSE_ID for the course can be found using [this guide](https://community.canvaslms.com/t5/Student-Guide/How-do-I-view-all-my-Canvas-courses-as-a-student/ta-p/520). CHAINSTACK_NODE represents the Chainstack node URL, which you can get following [this guide](https://docs.chainstack.com/docs/manage-your-node). OWNER_ADDRESS is the wallet address of the the contract owner (i.e., in the future this would be the course responsible/teacher). OWNER_PRIVATE_KEY represents the [private key](https://support.metamask.io/hc/en-us/articles/360015289632-How-to-Export-an-Account-Private-Key) for the owner's Metamask wallet. CONTRACT_ADDRESS is the address that gets printed in the terminal when you deploy the contract (see instructions below). STUDENT_ADDRESS is the address of the student.
 
 To run the Python script with GitHub Actions, these variables are simply saved as [repository secret variables](https://www.python-engineer.com/posts/run-python-github-actions/).
 
@@ -53,7 +53,7 @@ A test suite for the contract can be found in `test/Grading.js` and run using:
 
 > `npx hardhat test --network hardhat`
 
-The testsuite can be tested for code coverage using:
+The test suite can be tested for code coverage using:
 
 > `npx hardhat coverage --network hardhat`
 
@@ -61,12 +61,12 @@ This would output the following result, i.e., full code coverage:
 
 ![Code coverage](code_coverage.png)
 
-### Depolyment
+### Deployment
 
 Deploying the smart contract can be done using the `scripts/deploy.js` file. First, make sure that the following three strings are filled out in the .env file:
 
 ```
-CHAINLINK_NODE = ""
+CHAINSTACK_NODE = ""
 OWNER_ADDRESS = ""
 OWNER_PRIVATE_KEY = ""  
 ```
