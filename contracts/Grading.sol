@@ -86,7 +86,7 @@ contract Grading is ERC1155, Ownable {
 
     /**
     * @notice Ensures that the maximum quantity of respective token per student is respected
-    * @dev Modifier used in mint and indirectly in mintBatch using mintBatchHelper. Account can have at most one token of each kind
+    * @dev Modifier used in mint. Account can have at most one token of each kind
     * @param account Address of account to check balance of
     * @param id ID of token to check balance of
     * @param amount Maximum amount of tokens that can be added to students account
